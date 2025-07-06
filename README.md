@@ -36,17 +36,17 @@ cp .env.example .env
 Edit `.env` and add your API keys:
 
 ```bash
-# Required: OpenAI API Key
-OPENAI_API_KEY=your_openai_api_key_here
+# LLM_PROVIDER=ollama
+# API_BASE_URL=http://host.docker.internal:11434/v1
+# MODEL_NAME_AT_ENDPOINT=qwen2.5:1.5b
+# NEWS_BASE_URL=https://newsapi.org/v2
+# PORT=8080
 
-# Optional but recommended: News API Key (free tier available)
-NEWS_API_KEY=your_news_api_key_here
 
 ```
 
 ### 3. Get API Keys
 
-- **OpenAI API Key**: Get from [OpenAI Platform](https://platform.openai.com/api-keys)
 - **News API Key**: Get free at [NewsAPI.org](https://newsapi.org/register)
 
 ### 4. Run Development Server
