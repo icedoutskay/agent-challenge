@@ -1,12 +1,13 @@
 import { Mastra } from "@mastra/core/mastra";
 import { PinoLogger } from "@mastra/loggers";
-import { weatherAgent } from "./agents/weather-agent/weather-agent"; // This can be deleted later
-import { weatherWorkflow } from "./agents/weather-agent/weather-workflow"; // This can be deleted later
-import { yourAgent } from "./agents/your-agent/your-agent"; // Build your agent here
+
+import { newsAgent } from "./agents/news-agent/news-agent"; 
+import { newsWorkflow } from "./agents/news-agent/news-workflow"; 
+
 
 export const mastra = new Mastra({
-	workflows: { weatherWorkflow }, // can be deleted later
-	agents: { weatherAgent, yourAgent },
+	workflows: { newsWorkflow }, 
+	agents: { newsAgent },
 	logger: new PinoLogger({
 		name: "Mastra",
 		level: "info",
@@ -16,3 +17,15 @@ export const mastra = new Mastra({
 		timeout: 10000,
 	},
 });
+
+console.log(" World News Headline Agent for Nosana Challenge");
+console.log(" Available Agents:");
+console.log(
+  "  - newsAgent"
+);
+console.log(" Available Workflows:");
+console.log(
+  "  - newsWorkflow: Complete news headline generation"
+);
+
+console.log(" Server starting on port 8080...");

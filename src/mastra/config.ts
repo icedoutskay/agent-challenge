@@ -1,18 +1,55 @@
 import dotenv from "dotenv";
 import { createOllama } from "ollama-ai-provider";
+import { openai } from "@ai-sdk/openai";
 
-// Load environment variables once at the beginning
 dotenv.config();
 
-// Export all your environment variables
-// Defaults to Ollama qwen2.5:1.5b
-// https://ollama.com/library/qwen2.5
-export const modelName = process.env.MODEL_NAME_AT_ENDPOINT ?? "qwen2.5:1.5b";
-export const baseURL = process.env.API_BASE_URL ?? "http://127.0.0.1:11434/api";
+const llmProvider = process.env.LLM_PROVIDER ?? "ollama";
 
-// Create and export the model instance
-export const model = createOllama({ baseURL }).chat(modelName, {
-  simulateStreaming: true,
-});
+// OpenAI Configuration
+export const openaiApiKey = process.env.OPENAI_API_KEY;
+export const openaiModel = process.env.OPENAI_MODEL ?? "gpt-3.5-turbo";
 
-console.log(`ModelName: ${modelName}\nbaseURL: ${baseURL}`);
+// Ollama Configuration (for local development)
+export const ollamaModelName = process.env.OLLAMA_MODEL ?? "qwen2.5:1.5b";
+export const ollamaBaseURL =
+  process.env.OLLAMA_BASE_URL ?? "http://127.0.0.1:11434/api";
+
+export const model = (() => {
+  if (llmProvider === "openai") {
+    if (!openaiApiKey) {
+      throw new Error("OPENAI_API_KEY is required when using OpenAI provider");
+    }
+    console.log(`🤖 Using OpenAI Model: ${openaiModel}`);
+    return openai(openaiModel);
+  } else {
+    console.log(
+      `🦙 Using Ollama Model: ${ollamaModelName} at ${ollamaBaseURL}`
+    );
+    return createOllama({ baseURL: ollamaBaseURL }).chat(ollamaModelName, {
+      simulateStreaming: true,
+    });
+  }
+})();
+
+export const config = {
+  llmProvider,
+  openai: {
+    apiKey: openaiApiKey,
+    model: openaiModel,
+  },
+  ollama: {
+    model: ollamaModelName,
+    baseURL: ollamaBaseURL,
+  },
+  apis: {
+    geocodingBaseUrl: "https://geocoding-api.open-meteo.com/v1",
+    weatherBaseUrl: "https://api.open-meteo.com/v1",
+  },
+  server: {
+    port: parseInt(process.env.PORT ?? "8080"),
+    timeout: parseInt(process.env.REQUEST_TIMEOUT ?? "30000"),
+  },
+};
+
+console.log(` News Agent Config - Provider: ${llmProvider}`);
